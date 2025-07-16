@@ -24,7 +24,7 @@
                     <img src="../../assets/images/construction.png" alt="Under Construction" width="240" height="160">
                 </div>
                 <div>
-                    <h4 class="alert-heading mb-2">Dashboard</h4>
+                    <h4 class="alert-heading mb-2">Manage Appointments</h4>
                     <p class="mb-0 text-secondary">
                         This page is currently <strong>under construction</strong>.<br>
                         We're working diligently to bring this feature to life. Please check back again soon.
