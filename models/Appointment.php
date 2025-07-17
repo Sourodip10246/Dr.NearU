@@ -39,4 +39,35 @@ class Appointment
             ':status'           => $data['status']           ?? 'pending',
         ]);
     }
+
+    public function countAll()
+    {
+        $stmt = $this->db->query("SELECT COUNT(*) FROM appointments");
+        return $stmt->fetchColumn();
+    }
+
+    public function getPaginated($limit, $offset)
+    {
+        $stmt = $this->db->prepare("
+            SELECT appointments.*, doctors.name AS doctor_name
+            FROM appointments
+            JOIN doctors ON appointments.doctor_id = doctors.id
+            ORDER BY appointment_date DESC, time_slot ASC
+            LIMIT ? OFFSET ?
+        ");
+        $stmt->execute([$limit, $offset]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function updateStatus($appointmentId, $status)
+    {
+        $stmt = $this->db->prepare("UPDATE appointments SET status = ? WHERE id = ?");
+        return $stmt->execute([$status, $appointmentId]);
+    }
+
+    public function deleteById($id) {
+    $stmt = $this->db->prepare("DELETE FROM appointments WHERE id = ?");
+    return $stmt->execute([$id]);
+}
+
 }

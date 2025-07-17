@@ -2,7 +2,8 @@
 
 require_once __DIR__ . "/../models/Appointment.php";
 
-class AppointmentController {
+class AppointmentController
+{
     private $appointModel;
 
     public function __construct($pdo)
@@ -10,11 +11,34 @@ class AppointmentController {
         $this->appointModel = new Appointment($pdo);
     }
 
-    public function add(array $data){
+    public function add(array $data)
+    {
         return $this->appointModel->addNewAppointment($data);
     }
 
-    public function isExist(array $data) {
+    public function isExist(array $data)
+    {
         return $this->appointModel->getAppointmentByDocId($data['doctor_id'], $data['appointment_date'], $data['time_slot']);
+    }
+
+    public function getTotalCount()
+    {
+        return $this->appointModel->countAll();
+    }
+
+    public function getAppointments($limit, $offset)
+    {
+        return $this->appointModel->getPaginated($limit, $offset);
+    }
+
+    public function changeStatus($id, $status)
+    {
+        return $this->appointModel->updateStatus($id, $status);
+    }
+
+    public function delete($id)
+    {
+        $stmt = $this->appointModel->deleteById($id);
+        return $stmt;
     }
 }

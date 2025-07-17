@@ -16,23 +16,109 @@
         <?php require_once "../layout/sidebar.php" ?>
 
         <!-- Main Content -->
+        <?php
+        require_once "../../config/db.php";
+        require_once "../../controllers/AppointmentController.php";
+        $controller = new AppointmentController($pdo);
+
+        // Handle status update
+        if (isset($_POST['update_status'])) {
+            $controller->changeStatus($_POST['appointment_id'], $_POST['status']);
+        }
+
+        if (isset($_POST['delete_appointment']) && isset($_POST['appointment_id'])) {
+            $controller->delete($_POST['appointment_id']);
+        }
+
+        // Pagination
+        $limit = 5;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $offset = ($page - 1) * $limit;
+
+        $totalAppointments = $controller->getTotalCount();
+        $totalPages = ceil($totalAppointments / $limit);
+
+        $appointments = $controller->getAppointments($limit, $offset);
+        ?>
+
         <div id="main-content">
             <h1 class="mb-4">Welcome <?= $_SESSION['userName'] ?></h1>
+            <h3 class="mb-3">Appointment Manager</h3>
 
-            <div class="alert alert-warning border-warning-subtle rounded-4 shadow-sm d-flex align-items-center p-4" role="alert">
-                <div class="flex-shrink-0 me-4">
-                    <img src="../../assets/images/construction.png" alt="Under Construction" width="240" height="160">
-                </div>
-                <div>
-                    <h4 class="alert-heading mb-2">Manage Appointments</h4>
-                    <p class="mb-0 text-secondary">
-                        This page is currently <strong>under construction</strong>.<br>
-                        We're working diligently to bring this feature to life. Please check back again soon.
-                    </p>
-                </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#ID</th>
+                            <th>Patient</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Doctor</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Update</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($appointments as $app) { ?>
+                            <tr>
+                                <td><?= $app['id'] ?></td>
+                                <td><?= htmlspecialchars($app['patient_name']) ?></td>
+                                <td><?= htmlspecialchars($app['email']) ?></td>
+                                <td><?= htmlspecialchars($app['phone']) ?></td>
+                                <td><?= htmlspecialchars($app['doctor_name']) ?></td>
+                                <td><?= $app['appointment_date'] ?></td>
+                                <td><?= date('H:i', strtotime($app['time_slot'])) ?></td>
+                                <td>
+                                    <span class="badge 
+            <?php
+                            if ($app['status'] == 'confirmed') echo 'bg-success';
+                            elseif ($app['status'] == 'cancelled') echo 'bg-danger';
+                            else echo 'bg-warning text-dark';
+            ?>">
+                                        <?= ucfirst($app['status']) ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <form method="POST" class="d-flex gap-1 align-items-center">
+                                        <input type="hidden" name="appointment_id" value="<?= $app['id'] ?>">
+
+                                        <!-- Status Update -->
+                                        <select name="status" class="form-select form-select-sm">
+                                            <option value="pending" <?= $app['status'] == 'pending' ? 'selected' : '' ?>>Pending</option>
+                                            <option value="confirmed" <?= $app['status'] == 'confirmed' ? 'selected' : '' ?>>Confirmed</option>
+                                            <option value="cancelled" <?= $app['status'] == 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
+                                        </select>
+
+                                        <button type="submit" name="update_status" class="btn btn-primary btn-sm">Save</button>
+
+                                        <!-- Delete Button -->
+                                        <button type="submit" name="delete_appointment" class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Are you sure you want to delete this appointment?')">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+
+                        <?php } ?>
+                    </tbody>
+                </table>
             </div>
 
+            <!-- Pagination -->
+            <nav>
+                <ul class="pagination justify-content-center mt-4">
+                    <?php for ($i = 1; $i <= $totalPages; $i++) { ?>
+                        <li class="page-item <?= $page == $i ? 'active' : '' ?>">
+                            <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+                        </li>
+                    <?php } ?>
+                </ul>
+            </nav>
         </div>
+
 
 
 
