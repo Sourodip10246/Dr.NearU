@@ -9,5 +9,5 @@ $controller = new DoctorController($pdo);
 
 $controller->delete($id);
 
-header("Loacation: doctorManager.php");
+header("Location: doctorManager.php");
 exit();
