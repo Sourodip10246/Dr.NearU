@@ -13,24 +13,65 @@
 
     <?php require_once "../layout/header.php" ?>
     <div class="d-flex">
-        <?php require_once "../layout/sidebar.php" ?>
+        <?php require_once "../layout/sidebar.php";
+
+        require_once "../../config/db.php";
+        require_once "../../controllers/SpecializationController.php";
+
+        $controller = new SpecializationController($pdo);
+        $specializations = $controller->index();
+        ?>
 
         <!-- Main Content -->
         <div id="main-content">
             <h1 class="mb-4">Welcome <?= $_SESSION['userName'] ?></h1>
 
-            <div class="alert alert-warning border-warning-subtle rounded-4 shadow-sm d-flex align-items-center p-4" role="alert">
-                <div class="flex-shrink-0 me-4">
-                    <img src="../../assets/images/construction.png" alt="Under Construction" width="240" height="160">
-                </div>
-                <div>
-                    <h4 class="alert-heading mb-2">Manage Specializations</h4>
-                    <p class="mb-0 text-secondary">
-                        This page is currently <strong>under construction</strong>.<br>
-                        We're working diligently to bring this feature to life. Please check back again soon.
-                    </p>
-                </div>
-            </div>
+            <h3 class="mb-3">Specialization Manager</h3>
+            <a href="addSpe.php" class="btn btn-primary mb-3">Add Specialization</a>
+
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#ID</th>
+                        <th>Name</th>
+                        <th>Icon</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if (!empty($specializations)) {
+                        foreach ($specializations as $spe) {
+                    ?>
+                            <tr>
+                                <td><?= $spe['id'] ?></td>
+                                <td><?= $spe['name'] ?></td>
+                                <td><img src="../../assets/images/<?= $spe['icon'] ?>" alt="Cardiology Icon" width="40"></td>
+                                <td class="text-center">
+                                    <a href="addSpe.php?id=<?= $spe['id'] ?>&name=<?= $spe['name'] ?>&icon=<?= $spe['icon'] ?>" class="btn btn-warning btn-sm me-2">Edit</a>
+                                    <a href="deleteSpe.php?id=<?= $spe['id'] ?>"
+                                        class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Are you sure you want to delete this specialization?');">
+                                        Delete
+                                    </a>
+
+                                </td>
+                            </tr>
+                        <?php
+                        }
+                    } else {
+                        ?>
+                        <tr>
+                            <td colspan="9" class="text-center text-muted py-4">
+                                <strong>No Specialization found.</strong>
+                            </td>
+                        </tr>
+
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
 
         </div>
 

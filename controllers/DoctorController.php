@@ -27,5 +27,16 @@ class DoctorController {
         }
         
     } 
+
+    public function delete($id){
+        return $this->doctorModel->deleteDocById($id);
+    }
     
+    public function addDoc($name, $specialization_id, $image, $available_days, $start, $end, $slot){
+        return $this->doctorModel->addNewDoctor($name, $specialization_id, $image, $available_days, $start, $end, $slot);
+    }
+
+    public function updateDoc($id, $name, $specialization_id, $image, $available_days, $start, $end, $slot){
+        return $this->doctorModel->updateDoctor($id, $name, $specialization_id, $image, $available_days, $start, $end, $slot);
+    }
 }

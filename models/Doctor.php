@@ -77,4 +77,35 @@ class Doctor
         ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function deleteDocById($id)
+    {
+        $stmt = $this->db->prepare("DELETE FROM doctors WHERE id = ?");
+        $stmt->execute([$id]);
+    }
+
+
+    public function addNewDoctor($name, $specializationId, $imagePath, $availableDays, $startTime, $endTime, $slotDuration)
+    {
+        $stmt = $this->db->prepare("
+        INSERT INTO doctors (name, specialization_id, image, available_days, start_time, end_time, slot_duration)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    ");
+        $stmt->execute([
+            $name,
+            $specializationId,
+            $imagePath,
+            $availableDays,
+            $startTime,
+            $endTime,
+            $slotDuration
+        ]);
+    }
+
+
+    public function updateDoctor($id, $name, $specialization_id, $image, $available_days, $start, $end, $slot)
+    {
+        $stmt = $this->db->prepare("UPDATE doctors SET name = ?, specialization_id = ?, image = ?, available_days = ?, start_time = ?, end_time = ?, slot_duration = ? WHERE id = ?");
+        $stmt->execute([$name, $specialization_id, $image, $available_days, $start, $end, $slot, $id]);
+    }
 }

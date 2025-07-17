@@ -13,27 +13,72 @@
 
     <?php require_once "../layout/header.php" ?>
     <div class="d-flex">
-        <?php require_once "../layout/sidebar.php" ?>
+        <?php require_once "../layout/sidebar.php";
+        require_once "../../config/db.php";
+        require_once "../../controllers/DoctorController.php";
+
+        $controller = new DoctorController($pdo);
+        $doctors = $controller->index();
+
+        ?>
 
         <!-- Main Content -->
         <div id="main-content">
             <h1 class="mb-4">Welcome <?= $_SESSION['userName'] ?></h1>
 
-            <div class="alert alert-warning border-warning-subtle rounded-4 shadow-sm d-flex align-items-center p-4" role="alert">
-                <div class="flex-shrink-0 me-4">
-                    <img src="../../assets/images/construction.png" alt="Under Construction" width="240" height="160">
-                </div>
-                <div>
-                    <h4 class="alert-heading mb-2">Manage Doctors</h4>
-                    <p class="mb-0 text-secondary">
-                        This page is currently <strong>under construction</strong>.<br>
-                        We're working diligently to bring this feature to life. Please check back again soon.
-                    </p>
-                </div>
-            </div>
+            <h3 class="mb-3">Doctor Manager</h3>
+            <a href="addDoctor.php" class="btn btn-primary mb-3">Add Doctor</a>
 
+            <table class="table table-bordered table-striped text-center align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#ID</th>
+                        <th>Name</th>
+                        <th>Specialization</th>
+                        <th>Image</th>
+                        <th>Available Days</th>
+                        <th>Time</th>
+                        <th>Slot (mins)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample Row 1 -->
+                    <?php
+                    if (!empty($doctors)):
+                        foreach ($doctors as $doc):
+                    ?>
+                            <tr>
+                                <td><?= $doc['id'] ?></td>
+                                <td><?= $doc['name'] ?></td>
+                                <td><?= $doc['sp_name'] ?></td>
+                                <td><img src="../../assets/images/<?= $doc['image'] ?>" width="50" height="50" alt="Doctor"></td>
+                                <td><?= $doc['available_days'] ?></td>
+                                <td><?= date("H:i", strtotime($doc['start_time'])) ?>-<?= date("H:i", strtotime($doc['end_time'])) ?></td>
+                                <td><?= $doc['slot_duration'] ?></td>
+                                <td>
+                                    <a href="addDoctor.php?id=<?= $doc['id'] ?>&name=<?= urlencode($doc['name']) ?>&specialization_id=<?= $doc['specialization_id'] ?>&available_days=<?= urlencode($doc['available_days']) ?>&start_time=<?= $doc['start_time'] ?>&end_time=<?= $doc['end_time'] ?>&slot_duration=<?= $doc['slot_duration'] ?>&image=<?= urlencode($doc['image']) ?>"
+                                        class="btn btn-warning btn-sm">Edit</a>
+
+                                    <a href="deleteDoctor.php?id=<?= $doc['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this doctor?')">Delete</a>
+                                </td>
+                            </tr>
+                        <?php
+                        endforeach;
+                    else:
+                        ?>
+                        <tr>
+                            <td colspan="9" class="text-center text-muted py-4">
+                                <strong>No doctor found.</strong>
+                            </td>
+                        </tr>
+
+                    <?php
+                    endif;
+                    ?>
+                </tbody>
+            </table>
         </div>
-
 
 
     </div>

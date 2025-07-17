@@ -1,9 +1,9 @@
 CREATE TABLE doctors (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     specialization_id INT NOT NULL,
     image VARCHAR(255),
-    available_days VARCHAR(50), -- e.g. "Mon,Tue,Thu"
+    available_days VARCHAR(50),
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
     slot_duration INT DEFAULT 15,
