@@ -49,7 +49,7 @@
                                 <td><img src="../../assets/images/<?= $spe['icon'] ?>" alt="Cardiology Icon" width="40"></td>
                                 <td class="text-center">
                                     <a href="addSpe.php?id=<?= $spe['id'] ?>&name=<?= $spe['name'] ?>&icon=<?= $spe['icon'] ?>" class="btn btn-warning btn-sm me-2">Edit</a>
-                                    <a href="deleteSpe.php?id=<?= $spe['id'] ?>"
+                                    <a href="deleteSpe.php?id=<?= $spe['id'] ?>&image=<?= urlencode($spe['icon']) ?>"
                                         class="btn btn-danger btn-sm"
                                         onclick="return confirm('Are you sure you want to delete this specialization?');">
                                         Delete

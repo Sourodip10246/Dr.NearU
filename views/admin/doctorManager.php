@@ -60,7 +60,7 @@
                                     <a href="addDoctor.php?id=<?= $doc['id'] ?>&name=<?= urlencode($doc['name']) ?>&specialization_id=<?= $doc['specialization_id'] ?>&available_days=<?= urlencode($doc['available_days']) ?>&start_time=<?= $doc['start_time'] ?>&end_time=<?= $doc['end_time'] ?>&slot_duration=<?= $doc['slot_duration'] ?>&image=<?= urlencode($doc['image']) ?>"
                                         class="btn btn-warning btn-sm">Edit</a>
 
-                                    <a href="deleteDoctor.php?id=<?= $doc['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this doctor?')">Delete</a>
+                                    <a href="deleteDoctor.php?id=<?= $doc['id'] ?>&image=<?= urlencode($doc['image']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this doctor?')">Delete</a>
                                 </td>
                             </tr>
                         <?php

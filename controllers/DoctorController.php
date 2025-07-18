@@ -39,4 +39,8 @@ class DoctorController {
     public function updateDoc($id, $name, $specialization_id, $image, $available_days, $start, $end, $slot){
         return $this->doctorModel->updateDoctor($id, $name, $specialization_id, $image, $available_days, $start, $end, $slot);
     }
+
+    public function countDoctors(){
+        return $this->doctorModel->getDocCount();
+    }
 }

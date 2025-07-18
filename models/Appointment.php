@@ -65,9 +65,66 @@ class Appointment
         return $stmt->execute([$status, $appointmentId]);
     }
 
-    public function deleteById($id) {
-    $stmt = $this->db->prepare("DELETE FROM appointments WHERE id = ?");
-    return $stmt->execute([$id]);
-}
+    public function deleteById($id)
+    {
+        $stmt = $this->db->prepare("DELETE FROM appointments WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
 
+    public function countPatient()
+    {
+        $stmt = $this->db->query("SELECT COUNT(DISTINCT patient_name) FROM appointments;");
+        return $stmt->fetchColumn();
+    }
+
+    public function showRecentBookedAppointment()
+    {
+        $stmt = $this->db->prepare("
+        SELECT ap.patient_name, ap.status, dr.name AS doctor_name 
+        FROM appointments AS ap 
+        INNER JOIN doctors AS dr ON dr.id = ap.doctor_id 
+        ORDER BY ap.created_at DESC 
+        LIMIT 5");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getWeeklyAppointments($from, $to)
+    {
+        $stmt = $this->db->prepare("
+        SELECT DATE(created_at) AS day, COUNT(*) AS total
+        FROM appointments
+        WHERE DATE(created_at) BETWEEN :from AND :to
+        GROUP BY day
+        ORDER BY day
+    ");
+        $stmt->execute(['from' => $from, 'to' => $to]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getMonthlyAppointments($from, $to)
+    {
+        $stmt = $this->db->prepare("
+        SELECT DATE(created_at) AS day, COUNT(*) AS total
+        FROM appointments
+        WHERE DATE(created_at) BETWEEN :from AND :to
+        GROUP BY day
+        ORDER BY day
+    ");
+        $stmt->execute(['from' => $from, 'to' => $to]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getYearlyAppointments($from, $to)
+    {
+        $stmt = $this->db->prepare("
+        SELECT MONTH(created_at) AS month, COUNT(*) AS total
+        FROM appointments
+        WHERE DATE(created_at) BETWEEN :from AND :to
+        GROUP BY month
+        ORDER BY month
+    ");
+        $stmt->execute(['from' => $from, 'to' => $to]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

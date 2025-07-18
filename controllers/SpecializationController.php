@@ -35,4 +35,8 @@ class SpecializationController
             return $this->specializationModel->updateSpecialization($id, $name, $icon);
         }
     }
+
+    public function countSpe(){
+        return $this->specializationModel->getSpeCount();
+    }
 }

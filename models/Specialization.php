@@ -32,4 +32,10 @@ class Specialization
         $stmt = $this->db->prepare("UPDATE specializations SET name = ?, icon = ? WHERE id = ?");
         $stmt->execute([$name, $icon, $id]);
     }
+
+    public function getSpeCount()
+    {
+        $stmt = $this->db->query("SELECT COUNT(*) FROM specializations");
+        return $stmt->fetchColumn();
+    }
 }

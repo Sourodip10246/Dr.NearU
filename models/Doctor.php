@@ -108,4 +108,10 @@ class Doctor
         $stmt = $this->db->prepare("UPDATE doctors SET name = ?, specialization_id = ?, image = ?, available_days = ?, start_time = ?, end_time = ?, slot_duration = ? WHERE id = ?");
         $stmt->execute([$name, $specialization_id, $image, $available_days, $start, $end, $slot, $id]);
     }
+
+    public function getDocCount()
+    {
+        $stmt = $this->db->query("SELECT COUNT(*) FROM doctors");
+        return $stmt->fetchColumn();
+    }
 }
